@@ -1,40 +1,30 @@
-namespace LojaCarros
+using LojaCarros.Models;
+using LojaCarros.Repositories;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// 1. Configurações de Serviços
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IMarcaRepository, MarcaRepository>();
+
+var app = builder.Build();
+
+// 2. Configurações do Pipeline (Swagger)
+if (app.Environment.IsDevelopment())
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
-
-            // Add services to the container.
-            builder.Services.AddAuthorization();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 
 
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-
-            app.UseAuthorization();
-
-            var summaries = new[]
-            {
-                "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-            };
-
-            app.MapGet("/weatherforecast", (HttpContext httpContext) =>
-            {
-                var forecast = Enumerable.Range(1, 5).Select(index =>
-                    new WeatherForecast
-                    {
-                        Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                        TemperatureC = Random.Shared.Next(-20, 55),
-                        Summary = summaries[Random.Shared.Next(summaries.Length)]
-                    })
-                    .ToArray();
-                return forecast;
-            });
-
-            app.Run();
-        }
-    }
 }
+
+// 3. Tuas Rotas (Minimal API)
+app.MapGet("/marcas", (IMarcaRepository repo) => Results.Ok(repo.ListarTodas()));
+
+app.MapPost("/marcas", (Marca marca, IMarcaRepository repo) => {
+    repo.Adicionar(marca);
+    return Results.Created($"/marcas", marca);
+});
+
+app.Run();
