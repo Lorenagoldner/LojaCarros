@@ -3,7 +3,7 @@ using LojaCarros.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Configurações de Serviços
+//Configurações de Serviços
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -15,17 +15,14 @@ builder.Services.AddScoped<ICarroRepository, CarroRepository>();
 
 var app = builder.Build();
 
-
-
-// 2. Configurações do Pipeline (Swagger)
-if (app.Environment.IsDevelopment()) // Apenas em desenvolvimento, para não expor a documentação em produção
-{
+//Swagger
+if (app.Environment.IsDevelopment()) 
     app.UseSwagger();
     app.UseSwaggerUI();
 
 }
 
-// 3. Tuas Rotas (Minimal API)
+//Rotas
 app.MapGet("/marcas", (IMarcaRepository repo) =>
 {
     var marcas = repo.ListarTodas();
@@ -53,7 +50,6 @@ app.MapPost("/modelos", (Modelo modelo, IModeloRepository repo) =>
     return Results.Created($"/modelos/{modelo.ModeloID}", modelo);
 });
 
-// --- ROTAS DE CARROS ---
 app.MapGet("/carros", (ICarroRepository repo) =>
 {
     return Results.Ok(repo.ListarTodos());
