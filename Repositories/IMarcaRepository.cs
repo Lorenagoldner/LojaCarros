@@ -7,5 +7,7 @@ namespace LojaCarros.Repositories
         // Contrato: quem usar este repositório terá de implementar estes métodos, nesse caso de listar e adicionar
         IEnumerable<Marca> ListarTodas();
         void Adicionar(Marca marca);
+        void Atualizar(Marca marca);
+        void Deletar(int id);
     }
 }

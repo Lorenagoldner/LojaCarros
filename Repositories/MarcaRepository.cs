@@ -27,5 +27,26 @@ namespace LojaCarros.Repositories
             marca.MarcaID = Convert.ToInt32(idGerado);
             
         }
+
+        public void Atualizar(Marca marca)
+        {
+            var sql = "UPDATE Marcas SET NomeMarca = @nome WHERE MarcaID = @id";
+            var parametros = new Dictionary<string, object>
+            {
+                { "@nome", marca.NomeMarca },
+                { "@id", marca.MarcaID }
+            };
+            DALPro.Execute(sql, parametros);
+        }
+
+        public void Deletar(int id)
+        {
+            var sql = "DELETE FROM Marcas WHERE MarcaID = @id";
+            var parametros = new Dictionary<string, object>
+            {
+                { "@id", id }
+            };
+            DALPro.Execute(sql, parametros);
+        }
     }
 }

@@ -1,12 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LojaCarros.Models
 
 {
     public class Modelo
     {
+       
+        [Key]
         public int ModeloID { get; set; }
-        [Column("Modelo")] // mapeia com o nome da coluna no banco
         public string NomeModelo { get; set; }
         public int MarcaID { get; set; }
         public Marca Marca { get; set; }

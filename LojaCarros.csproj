@@ -15,8 +15,4 @@
     <ProjectReference Include="..\..\..\materialdasmeninas\Biblioteca.ADONet\Biblioteca.ADONet.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\" />
-  </ItemGroup>
-
 </Project>
