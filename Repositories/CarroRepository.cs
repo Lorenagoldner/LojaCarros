@@ -59,6 +59,7 @@ namespace LojaCarros.Repositories
         {
             var sql = @"SELECT 
                     c.CarroID as Id, 
+                    c.Placa
                     ma.NomeMarca as Marca, 
                     mo.NomeModelo as Modelo, 
                     c.Ano, 
