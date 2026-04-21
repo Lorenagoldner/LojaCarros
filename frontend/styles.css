@@ -1,0 +1,84 @@
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+    }
+
+    h1,
+    h2 {
+        margin-top: 20px;
+    }
+
+    select,
+    input,
+    button {
+        margin: 5px;
+        padding: 5px;
+        border: 1px solid black;
+        border-radius: 4px;
+        
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    th,
+    td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: center;
+    }
+
+    th {
+        background: #f0f0f0;
+    }
+
+    .vendido {
+        color: red;
+        font-weight: bold;
+    }
+
+    .ok {
+        color: green;
+    }
+
+    .aviso {
+        color: orange;
+        font-weight: bold;
+    }
+    .editar-btn{
+        background-color: #e3f2fd; 
+        color: #1976d2; 
+        border: 2px solid #90caf9; 
+    }
+    
+    .excluir-btn{
+        background-color: #ffebee; 
+        color: #d32f2f; 
+        border: 2px solid #ffcdd2; 
+    }
+
+    .status {
+    font-weight: bold;
+    }
+
+    .status.vendido {
+        color: red;
+    }
+
+    .status.disponivel {
+        color: green;
+    }
+
+    #topo {
+        position: sticky;
+        top: 0;
+        background: white;
+        padding: 10px 0;
+        z-index: 200;
+        border-bottom: 2px solid #ccc;
+    }
+
+    

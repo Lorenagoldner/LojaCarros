@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Gestão de Veículos</title>
+    <link rel="stylesheet" href="styles.css">
+    
+</head>
+
+<body>
+    <div id="topo">
+        <h1>Gestão de Veículos</h1>
+
+        <!-- <button id="carregarLS">(Re)Inicializar BD</button>
+        <button id="limparLS">Limpar BD</button> -->
+
+        <h2>Adicionar / Editar Veículo</h2>
+        <form id="formVeiculo">
+            <input type="hidden" id="editIndex" />
+            <label>Marca:</label>
+                <select id="marca" required>
+                    <option value="">Selecione uma marca</option>
+                </select>
+            <label>Modelo:</label>
+                <select id="modelo" required disabled>
+                    <option value="">Selecione primeiro a marca</option>
+                </select>
+            <input type="number" id="ano" placeholder="Ano" required />
+            <input type="text" id="inputPlaca" placeholder="Placa" required />
+            <input type="date" id="inspecao" required />
+            <label><input type="checkbox" id="vendido" /> Vendido</label>
+            <button type="submit">Guardar</button>
+        </form>
+
+        <h2>Filtros</h2>
+        <label for="fMarca">Marca:</label>
+        <select id="fMarca">
+            <option value=""></option>
+        </select>
+
+        <label for="fAno">Ano:</label>
+        <select id="fAno">
+            <option value=""></option>
+        </select>
+
+        <label for="fVendido">Status:</label>
+        <select id="fVendido">
+            <option value=""></option>
+            <!--<option value="false">Disponíveis</option>-->
+            <!--<option value="true">Vendidos</option>-->
+        </select>
+
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Ano</th>
+                <th>Última Inspeção</th>
+                <th>Estado</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="tabela"></tbody>
+    </table>
+
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>
