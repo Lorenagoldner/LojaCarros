@@ -1,40 +1,132 @@
-namespace LojaCarros
+using LojaCarros.Models;
+using LojaCarros.Repositories;
+using Microsoft.AspNetCore.Builder;
+using LojaCarros.DTOs;
+
+var builder = WebApplication.CreateBuilder(args);
+
+//Cors
+builder.Services.AddCors(options =>
 {
-    public class Program
+    options.AddDefaultPolicy(policy =>
     {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+        policy.AllowAnyOrigin() 
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
-            // Add services to the container.
-            builder.Services.AddAuthorization();
 
+//Configurações de Serviços
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
-            var app = builder.Build();
+Biblioteca.ADONet.DALPro.ConnectionString = builder.Configuration.GetConnectionString("LojaCarros");
 
-            // Configure the HTTP request pipeline.
+builder.Services.AddScoped<IMarcaRepository, MarcaRepository>();
+builder.Services.AddScoped<IModeloRepository, ModeloRepository>();
+builder.Services.AddScoped<ICarroRepository, CarroRepository>();
 
-            app.UseAuthorization();
+var app = builder.Build();
 
-            var summaries = new[]
-            {
-                "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-            };
+app.UseCors();
 
-            app.MapGet("/weatherforecast", (HttpContext httpContext) =>
-            {
-                var forecast = Enumerable.Range(1, 5).Select(index =>
-                    new WeatherForecast
-                    {
-                        Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                        TemperatureC = Random.Shared.Next(-20, 55),
-                        Summary = summaries[Random.Shared.Next(summaries.Length)]
-                    })
-                    .ToArray();
-                return forecast;
-            });
+//Swagger
+if (app.Environment.IsDevelopment()) 
+{ 
+    app.UseSwagger();
+    app.UseSwaggerUI();
 
-            app.Run();
-        }
-    }
 }
+
+//Rotas Marcas
+app.MapGet("/marcas", (IMarcaRepository repo) =>
+{
+    var marcas = repo.ListarTodas();
+    return Results.Ok(marcas);
+});
+
+app.MapGet("/modelos/marca/{id}", (int id, IModeloRepository repo) =>
+{
+    var modelos = repo.ListarPorMarca(id);
+    return Results.Ok(modelos);
+});
+
+app.MapPost("/marcas", (Marca marca, IMarcaRepository repo) =>
+{
+    if (marca == null) return Results.BadRequest("Dados inválidos");
+
+    repo.Adicionar(marca);
+
+    // Retorna 201 Created e indica a URL de acesso (opcionalmente)
+    return Results.Created($"/marcas/{marca.MarcaID}", marca);
+});
+
+app.MapPut("/marcas/{id}", (int id, Marca marca, IMarcaRepository repo) =>
+{
+    if (marca == null || marca.MarcaID != id) return Results.BadRequest("Dados inválidos");
+    repo.Atualizar(marca);
+    return Results.Ok(marca);
+});
+
+app.MapDelete("/marcas/{id}", (int id, IMarcaRepository repo) =>
+{
+    repo.Deletar(id);
+    return Results.NoContent();
+});
+
+
+
+//Rotas Modelos
+app.MapGet("/modelos", (IModeloRepository repo) =>
+{
+    return Results.Ok(repo.ListarTodos());
+});
+
+app.MapPost("/modelos", (Modelo modelo, IModeloRepository repo) =>
+{
+    repo.Adicionar(modelo);
+    return Results.Created($"/modelos/{modelo.ModeloID}", modelo);
+});
+
+app.MapPut("/modelos/{id}", (int id, Modelo modelo, IModeloRepository repo) =>
+{
+    modelo.ModeloID = id; 
+    repo.Atualizar(modelo);
+    return Results.Ok(modelo);
+});
+
+app.MapDelete("/modelos/{id}", (int id, IModeloRepository repo) =>
+{
+    repo.Deletar(id);
+    return Results.NoContent();
+});
+
+//Rotas Carros
+app.MapGet("/carros", (ICarroRepository repo) =>
+{
+    return Results.Ok(repo.ListarParaTabela());
+});
+
+app.MapPost("/carros", (VeiculoCreateDTO carroDto, ICarroRepository repo) =>
+{
+    if (carroDto == null) return Results.BadRequest("Dados inválidos");
+
+    repo.Adicionar(carroDto);
+    return Results.Created("/carros", carroDto);
+});
+
+app.MapPut("/carros/{id}", (int id, VeiculoCreateDTO carroDto, ICarroRepository repo) =>
+{
+    if (carroDto == null) return Results.BadRequest("Dados inválidos");
+
+    repo.Atualizar(id, carroDto);
+    return Results.Ok("CArro atualizado com sucesso");
+});
+
+app.MapDelete("/carro/{id}", (int id, ICarroRepository repo) =>
+{
+    repo.Deletar(id);
+    return Results.NoContent();
+});
+app.Run();
